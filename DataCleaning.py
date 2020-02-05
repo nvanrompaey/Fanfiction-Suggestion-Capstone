@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import pickle
+from bs4 import BeautifulSoup
+import json
 
 def safeget(x,s,a,b): 
     #If a dictionary exists within dictionary X, 
@@ -113,7 +115,13 @@ def FicCorr(df):
     
     
     
-    
+def DescFic(df):
+    fimdescDF = df.loc(axis=1)[['title','archive','description_html']]
+    fimdescDF['description_long'] = fimdescDF['description_html'].apply(lambda x: 
+                                                                    BeautifulSoup(x).get_text('/n'
+                                                                                    ).replace('/n',' '
+                                                                                    ).replace('  ',' '))
+    return fimdescDF
     
     
     

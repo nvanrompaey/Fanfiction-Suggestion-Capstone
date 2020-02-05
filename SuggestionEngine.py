@@ -18,4 +18,19 @@ def POSparser(stringinq):
         Taglist.append([i[1] for i in tagged])
         
     return [" ".join(a) for a in Taglist]
-    
+
+def lazyPOSparser(stringinq):
+    #Takes a string as a name you want the new row to be called, 
+    # and a dataframe + column on which to perform the transformation
+    tokenized = sent_tokenize(stringinq)
+    Taglist = []
+    for i in tokenized:
+        # DO THIS: minimize words and add dummy column
+        wordsList = nltk.word_tokenize(i)
+        tagged = nltk.pos_tag(wordsList)
+        Taglist.append([i[1] for i in tagged])
+    flat_list = []
+    for sublist in Taglist:
+        for item in sublist:
+            flat_list.append(item)
+    return flat_list

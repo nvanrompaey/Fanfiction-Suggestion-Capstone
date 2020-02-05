@@ -10,3 +10,11 @@ def textfinder(name):
     text = CETL(book)
     soup = BeautifulSoup(" ".join(text))
     return soup.get_text()
+
+def fic_col_monster(df,col,newcol,n):
+    df2 = df.iloc[:n]
+    #Takes a dataframe, a column in question, and spits out a 
+    # new column with the name newcol that prints super cool stuff
+    df2[newcol] = df2[col].apply(lambda x: textfinder(x))
+    return df2
+    

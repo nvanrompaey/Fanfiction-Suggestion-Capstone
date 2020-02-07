@@ -17,4 +17,10 @@ def fic_col_monster(df,col,newcol,n):
     # new column with the name newcol that prints super cool stuff
     df2[newcol] = df2[col].apply(lambda x: textfinder(x))
     return df2
+
+def fic_col_full(df,col,newcol):
+    df2 = df
+    #Takes the whole dataframe and column, then spits out a new colum with the given name
+    df2[newcol] = df2[col].apply(lambda x: textfinder(x))
+    return df2
     

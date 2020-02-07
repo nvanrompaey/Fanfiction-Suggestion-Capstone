@@ -99,7 +99,7 @@ def find_best_match(df,POSseries,n1,n2,story):
     
     
 def style_match(df,quantity,size,story):
-    # Similar to the above, but takes a MassStyles class
+    # Similar to the above, but takes a size instead of a n1/n2, and a quantity to determine how many stories will be in there.
     if type(story) == str:
         try:
             story = df[df['title']==story].index.values[0]
@@ -120,4 +120,21 @@ def style_match(df,quantity,size,story):
     three_choices = df['title'].loc(axis=0)[reccreturn]
     return [three_choices.iloc[2],closeficnums[recc[-1]][0,0]] ,[three_choices.iloc[1],closeficnums[recc[-2]][0,0]] , [three_choices.iloc[0], closeficnums[recc[-3]][0,0]]
     
-   
+def assumed_style_match(msty,quantity,story):
+    if type(story) == str:
+        try:
+            story = df[df['title']==story].index.values[0]
+        except IndexError:
+            return "This story is not available."
+        
+        v = df.index.to_series(index=range(df.shape[0]))
+    story = v[v==story].index.values[0]
+    
+    styarr = msty.StyleArray
+    closeficnums = np.array([cosine_similarity(styarr[story].reshape(1,-1),styarr[x].reshape(1,-1)) 
+                             if x!=story else -2 for x in range(quantity)]).flatten()
+    
+    recc = np.argsort(closeficnums)
+    reccreturn = v.iloc[recc[-3:]]
+    three_choices = df['title'].loc(axis=0)[reccreturn]
+    return [three_choices.iloc[2],closeficnums[recc[-1]][0,0]] ,[three_choices.iloc[1],closeficnums[recc[-2]][0,0]] , [three_choices.iloc[0], closeficnums[recc[-3]][0,0]]

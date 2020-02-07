@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import nltk
+import pickle
 from nltk.tokenize import word_tokenize,sent_tokenize
 from nltk import Text
 from nltk.probability import FreqDist
@@ -15,6 +16,7 @@ class MassStyles():
         self.df = df.iloc[:quantity]
         self.quantity=quantity
         self.size=size
+        self.StyleArray=None
         
         
     def make_array(self):
@@ -32,8 +34,8 @@ class MassStyles():
             arrayrow.append(SF.token_frequency(",",self.size)) #6
             arrayrow.append(SF.token_frequency(":",self.size)) #7
             arrayrow.append(SF.token_frequency(";",self.size)) #8
-            arrayrow.append(SF.token_frequency("\"",self.size)) #9
-            arrayrow.append(SF.token_frequency("?",self.size)) #10
+            arrayrow.append(SF.token_frequency("\" ",self.size)+SF.token_frequency("\' ",self.size)) #9
+            arrayrow.append(SF.token_frequency("...",self.size)) #10
             arrayrow.append(SF.token_frequency("!",self.size)) #11
             arrayrow.append(SF.token_frequency("-",self.size)) #12
             arrayrow.append(SF.token_frequency("--",self.size)) #13
@@ -59,10 +61,22 @@ class MassStyles():
             arrayrow.append(SF.token_frequency("there",self.size)) #32
             arrayrow.append(SF.token_frequency("might",self.size)) #33
             arrayrow.append(SF.token_frequency("maybe",self.size)) #34
-            arrayrow.append(SF.token_frequency("its",self.size)) # 35
+            arrayrow.append(SF.token_frequency("its",self.size)+SF.token_frequency('it\'s',self.size)) # 35
             
             #And set the new row to the current row
             self.StyleArray[row] = arrayrow
+        return None
+            
+    def pickle_it(self,filename='FicStyleArray'):
+        if self.StyleArray is not None:
+            
+            outfile= open(filename,'wb')
+            pickle.dump(self.StyleArray,outfile)
+            outfile.close()
+                
+        else:
+            print("There's nothing to pickle. Please run 'make_array()' first.")
+                
             
         return None
     

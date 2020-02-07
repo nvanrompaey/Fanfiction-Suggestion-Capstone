@@ -13,8 +13,7 @@ class StyleFinder():
         self.fic = fic
         self.words = word_tokenize(self.fic) #Tokenize up the words
         self.sentences = sent_tokenize(self.fic) #Tokenize up with sentences
-        self.text = Text(self.words) # Easier to work around getting unique words
-        self.fdist = FreqDist(self.text) # Get the frequency of a word, used for certain frequencies
+        self.fd = FreqDist(self.words) # Get the frequency of a word, used for certain frequencies
         self.sent_len = [len(sentence.split()) for sentence in self.sentences] # Get the length of each sentence
         self.word_len = [len(word) for word in set(self.words)]
         
@@ -28,7 +27,7 @@ class StyleFinder():
     
     def lex_diversity(self,size):
         #Take the number of unique tokens per 'size' number of words and divide it by the number of words total.
-        return (len(set(self.text))*size)/len(self.text)
+        return (len(set(self.words))*size)/len(self.words)
  
     def wordl_mean(self):
         #Mean word length
@@ -41,7 +40,7 @@ class StyleFinder():
     def token_frequency(self,wordy,size):
         # Find the frequency of a given word (or punctuation) per 'size' number of words
         # FreqDist is an iterable, and .N() returns all the unique items 
-        return (self.fdist[wordy]*size)/self.fdist.N()
+        return (self.fd[wordy]*size)/len(self.words)
         
         
         

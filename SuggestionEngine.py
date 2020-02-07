@@ -7,6 +7,9 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize,sent_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from MassStyles import MassStyles
+from StyleFinder import StyleFinder
+
 stop_words = set(stopwords.words('english'))
 
 def simplify_replace(POST):
@@ -89,10 +92,32 @@ def find_best_match(df,POSseries,n1,n2,story):
     feature_freq_df = pd.DataFrame.sparse.from_spmatrix(POSTFIDF)
     Targetfic = feature_freq_df.iloc[story].to_numpy().reshape(1,-1)
     closeficnums = np.array([cosine_similarity(Targetfic,
-                                 feature_freq_df.iloc[x].to_numpy().reshape(1,-1)) if x!=story else cosine_similarity(Targetfic,np.zeros((Targetfic.shape[0],Targetfic.shape[1]))) for x in range(1000)]).flatten()
+                                 feature_freq_df.iloc[x].to_numpy().reshape(1,-1)) if x!=story else -1 for x in range(1000)]).flatten()
     recc = np.argmax(closeficnums)
     reccreturn = v.iloc[recc]
     return df['title'].loc(axis=0)[reccreturn],closeficnums[recc],POSseries.loc(axis=0)[reccreturn]
     
     
+def style_match(df,quantity,size,story):
+    # Similar to the above, but takes a MassStyles class
+    if type(story) == str:
+        try:
+            story = df[df['title']==story].index.values[0]
+        except IndexError:
+            return "This story is not available."
     
+    v = df.index.to_series(index=range(df.shape[0]))
+    story = v[v==story].index.values[0]
+    
+    msty = MassStyles(df,quantity,size)
+    msty.make_array()
+    styarr = msty.StyleArray
+    closeficnums = np.array([cosine_similarity(styarr[story].reshape(1,-1),styarr[x].reshape(1,-1)) 
+                             if x!=story else -2 for x in range(quantity)]).flatten()
+    
+    recc = np.argsort(closeficnums)
+    reccreturn = v.iloc[recc[-3:]]
+    three_choices = df['title'].loc(axis=0)[reccreturn]
+    return [three_choices.iloc[2],closeficnums[recc[-1]][0,0]] ,[three_choices.iloc[1],closeficnums[recc[-2]][0,0]] , [three_choices.iloc[0], closeficnums[recc[-3]][0,0]]
+    
+   

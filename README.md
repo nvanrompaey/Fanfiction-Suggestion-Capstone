@@ -210,3 +210,14 @@ The reason for choosing Fanfiction in the first place is its difficulty to work 
 The reason for choosing My Little Pony fanfiction was its interesting use of Naming. Most characters are named after improper nouns. Twilight Sparkle is made up of two reasonable words: twilight and sparkle. Rainbow Dash is also made up of two regular nouns: rainbow and dash. Any function that tries to distinguish the proper nouns would have a great deal of difficulty with these particular proper nouns, and the multitude of similar ones. The use of lots of accents in dialogue, such as Applejack's, eg. "Ah didn' think you'd care" and such writing styles, makes it hard to parse out certain words when in dialogue or first person narrative.
 
 Lastly, the sheer size of the data was an issue. There were over 180,000 stories, with a total of 2.37 Billion words across them. That much data was a hassle to deal with even on the small scale of 100 stories, much less 10,000, much much less 180,000. This capstone was unable to get its AWS working within a reasonable length of time, and therefore this project could not continue beyond 10,000. These conclusions assume the first 10,000 stories. Notably, there was a period of time after which the minimum story length became 1,000.
+
+## Sources
+
+Scikit-Learn (TFIDF functions, Cosine Similarity, K-means functions)
+NLTK (NLP functions, POS_tag function)
+FIMFiction unofficial story archive (and metadata)
+FIMFiction official Statistics page (in csv form)
+"Stylometry-based Approach for Detecting Writing Style Changes in Literary Texts" for Inspiration in style approaches
+
+
+

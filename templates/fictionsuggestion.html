@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    
+    <title>Fiction Suggestion</title>
+    <meta name="description" content="Suggestion information text here">
+    <meta name="author" content="Nik Van Rompaey">
+    <script src="{{ url_for('static', filename='brython.js')}}"></script>
+    <script src="{{ url_for('static', filename='brython_stdlib.js')}}"></script>
+    
+</head>
+
+<body onload="brython()">
+    
+    <h1>Style-based Suggestion!</h1>
+    <p>Style is an important part of any writing analysis. Although there are themes, common words, genres, and characters, the way that someone writes can be very important to the quality and feeling of their work. In some cases, one chooses a writer for their style over the kind of story they write. Different authors can have the same style. Different Genres can have the same style.</p>
+    <p>This is a little look at parts of the methods I developed in order to perform recommendation.</p>
+    
+    <div>
+        <p>Below is a Parts-of-Speech finder. Try plugging in a sentence, and see what comes out! They'll be parts-of-speech signifiers, such as NN, which stands for a regular old noun, or VBG, which stands for a gerund verb.</p>
+    </div>
+    
+    <div>
+        <span>Sentence:</span> <input id='sentence'></input>
+    
+    </div>
+    <div>
+        <button type="button" id="pos">Find Parts of Speech</button>
+    </div>
+    
+    <div>
+        <p>The Parts of Speech are: <span id="posted"></span></p>
+    </div>
+ 
+    
+    <div>
+        <p>Below is a way to find just 4 of the many values I used for my second model. You'll find the mean sentence length, the mean word length, the lexical diversity, and the most common token word the sentence used. Try it!
+    </div>
+    
+    <div>
+        <span>Paragraph:</span> <input id='paragraph'></input>
+    
+    </div>
+    <div>
+        <button type="button" id="cool">Find PStylistic Qualities</button>
+    </div>
+    
+    <div>
+        <p>The mean sentence length is: <span id="smean"></span></p>
+    </div>
+     <div>
+        <p>The mean word length is: <span id="wmean"></span></p>
+    </div>
+     <div>
+        <p>The lexical diversity per 1000 words is: <span id="ldiv"></span></p>
+    </div>
+     <div>
+        <p>The most common stopword is: <span id="maxtoken"></span></p>
+    </div>
+<script type="text/python">
+
+from browser import document,ajax,console
+import json
+
+def get_sentence():
+    sent = document['sentence'].value
+    return {'sentence':sent}
+    
+def display_pos(req):
+    posted = json.loads(req.text)
+    document['posted'].html=f"{posted['posted']}"
+    
+def send_sentence_json(sentence):
+    req = ajax.Ajax()
+    req.bind('complete',display_pos)
+    req.open('POST','/post',True)
+    req.set_header('Content-Type','application/json')
+    req.send(json.dumps(sentence))
+
+
+def click(event):
+    console.log('clicked')
+    sent=get_sentence()
+    send_sentence_json(sent)
+
+document['pos'].bind('click',click)
+
+
+def get_paragraph():
+    para = document['paragraph'].value
+    return {'paragraph':para}
+
+def display_cool(req):
+    console.log(req.text)
+    reverse = json.loads(req.text)
+    console.log("and here")
+    document['smean'].html = f"{reverse['smean']}"
+    document['wmean'].html = f"{reverse['wmean']}"
+    document['ldiv'].html = f"{reverse['ldiv']}"
+    document['maxtoken'].html = f"{reverse['maxtoken']}"
+
+def send_paragraph_json(para):
+    req = ajax.Ajax()
+    req.bind('complete',display_cool)
+    req.open('POST','/reverse',True)
+    req.set_header('Content-Type','application/json')
+    req.send(json.dumps(para))
+
+def click2(event):
+    para = get_paragraph()
+    console.log("got them")
+    send_paragraph_json(para)
+    
+document['cool'].bind('click',click2)
+
+</script>    
+</body>
+</html>

@@ -1,7 +1,6 @@
 import numpy as np
 import nltk
 from nltk.tokenize import word_tokenize,sent_tokenize
-from nltk import Text
 from nltk.probability import FreqDist
 
 
